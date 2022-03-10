@@ -1,0 +1,37 @@
+<svg
+  width="100%"
+  height="100%"
+  id="svg"
+  viewBox="0 0 1440 700"
+  xmlns="http://www.w3.org/2000/svg"
+  class="transition duration-300 ease-in-out delay-150"
+>
+  <defs>
+    <linearGradient id="gradient" x1="3%" y1="34%" x2="97%" y2="66%">
+      <stop offset="5%" stop-color="#1890ff88"></stop>
+      <stop offset="95%" stop-color="#00d08488"></stop>
+    </linearGradient>
+  </defs>
+  <path
+    d="M 0,700 C 0,700 0,233 0,233 C 137.03571428571428,238.39285714285714 274.07142857142856,243.78571428571428 391,225 C 507.92857142857144,206.21428571428572 604.7499999999999,163.24999999999997 714,169 C 823.2500000000001,174.75000000000003 944.9285714285716,229.21428571428572 1068,248 C 1191.0714285714284,266.7857142857143 1315.5357142857142,249.89285714285714 1440,233 C 1440,233 1440,700 1440,700 Z"
+    stroke="none"
+    stroke-width="0"
+    fill="url(#gradient)"
+    class="transition-all duration-300 ease-in-out delay-150 path-0"
+    transform="rotate(-180 720 350)"
+  ></path>
+  <defs>
+    <linearGradient id="gradient" x1="3%" y1="34%" x2="97%" y2="66%">
+      <stop offset="5%" stop-color="#1890ffff"></stop>
+      <stop offset="95%" stop-color="#00d084ff"></stop>
+    </linearGradient>
+  </defs>
+  <path
+    d="M 0,700 C 0,700 0,466 0,466 C 129.89285714285714,440.17857142857144 259.7857142857143,414.35714285714283 384,411 C 508.2142857142857,407.64285714285717 626.7499999999999,426.75000000000006 735,434 C 843.2500000000001,441.24999999999994 941.2142857142858,436.6428571428571 1057,440 C 1172.7857142857142,443.3571428571429 1306.392857142857,454.67857142857144 1440,466 C 1440,466 1440,700 1440,700 Z"
+    stroke="none"
+    stroke-width="0"
+    fill="url(#gradient)"
+    class="transition-all duration-300 ease-in-out delay-150 path-1"
+    transform="rotate(-180 720 350)"
+  ></path>
+</svg>
