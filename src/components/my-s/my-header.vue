@@ -24,7 +24,7 @@
         </div>
 
         <div class="user-info-title" slot="title">
-          <span>{{ username }}</span>
+          <span style="font-size: 16px">{{ username }}</span>
           <a-icon
             class="user-setting" type="setting" theme="twoTone" twoToneColor="#41b349"
             @click="showDrawer"
@@ -74,7 +74,7 @@
 import myInfo from "./my-header-s/my-info.vue";
 
 import CONST from "../../assets/const.js";
-import reqwest from "reqwest";
+import axios from "../../plugins/Axios"
 
 export default {
   components: { myInfo },
@@ -103,29 +103,28 @@ export default {
     }
 
     if (this.$store.state.myUserID != "") {
-      reqwest({
-        url: CONST.URL + "/user/" + this.$store.state.myUserID,
+      let that = this
+      axios({
+        url: "/user/" + this.$store.state.myUserID,
         type: "json",
         method: "GET",
-        success: (res) => {
-          console.log("加载个人信息", res.msg);
-          this.user = res.msg.user;
+      })
+      .then(function (response) {
+        let res = response.data
+        // console.log("加载个人信息", res.msg);
+        that.user = res.msg.user;
 
-          this.username = res.msg.user.username;
-          this.headerUrl = res.msg.user.headerUrl;
-          this.level = res.msg.user.level;
-          this.exp = res.msg.user.exp;
+        that.username = res.msg.user.username;
+        that.headerUrl = res.msg.user.headerUrl;
+        that.level = res.msg.user.level;
+        that.exp = res.msg.user.exp;
 
-          this.followeeCount = res.msg.followeeCount;
-          this.followerCount = res.msg.followerCount;
-          this.userLikeCount = res.msg.user.likeCount;
+        that.followeeCount = res.msg.followeeCount;
+        that.followerCount = res.msg.followerCount;
+        that.userLikeCount = res.msg.user.likeCount;
 
-          this.$forceUpdate();
-          this.$emit("myHeaderLoadingFinish");
-        },
-        error: function (err) {
-          this.error = err;
-        },
+        that.$forceUpdate();
+        that.$emit("myHeaderLoadingFinish");
       });
     }
   },
@@ -170,7 +169,10 @@ export default {
 .user-info-title {
   font-size: 18px;
   margin-top: 10px;
-  margin-left: 10px;
+  margin-left: 5px;
+}
+.user-info-desc{
+  margin-left: 5px;
 }
 .user-setting {
   float: right;

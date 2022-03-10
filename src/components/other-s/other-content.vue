@@ -1,11 +1,11 @@
 <template>
   <div>
-    <otherPostsList :userID='userID' @loadingFinish=loadingFinish></otherPostsList>
+    <other-posts-list :userID='userID' @loadingFinish=loadingFinish></other-posts-list>
   </div>
 </template>
 
 <script>
-import otherPostsList from "./otherContent-s/other-posts-list.vue";
+import otherPostsList from "./other-content-s/other-posts-list.vue";
 export default {
   props:['userID'],
   components: { 
@@ -31,7 +31,6 @@ export default {
   height: 70%;
   padding-right: 10px;
   padding-left: 10px;
-  /* display:none; */
 }
 .test {
   position: fixed;

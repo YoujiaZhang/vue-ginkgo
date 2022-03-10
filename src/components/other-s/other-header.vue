@@ -22,7 +22,7 @@
         </div>
 
         <div class="user-info-title" slot="title">
-          <span>{{ username }}</span>
+          <span style="font-size: 16px">{{ username }}</span>
 
           <a-button
             class="user-follow-button"
@@ -73,8 +73,8 @@
 </template>
 
 <script>
+import axios from "../../plugins/Axios"
 import CONST from "../../assets/const.js";
-import reqwest from "reqwest";
 
 export default {
   props: ["userID"],
@@ -97,26 +97,28 @@ export default {
     };
   },
   created() {
-    reqwest({
-      url: CONST.URL + "/user/" + this.userID,
+    let that = this
+      axios({
+      url: "/user/" + this.userID,
       type: "json",
       method: "GET",
-      success: (res) => {
-        this.user = res.msg.user;
+    })
+    .then(function (response) {
+      let res = response.data
+      that.user = res.msg.user;
 
-        this.username = res.msg.user.username;
-        this.headerUrl = res.msg.user.headerUrl;
-        this.level = res.msg.user.level;
-        this.exp = res.msg.user.exp;
+      that.username = res.msg.user.username;
+      that.headerUrl = res.msg.user.headerUrl;
+      that.level = res.msg.user.level;
+      that.exp = res.msg.user.exp;
 
-        this.followeeCount = res.msg.followeeCount;
-        this.followerCount = res.msg.followerCount;
-        this.userLikeCount = res.msg.user.likeCount;
+      that.followeeCount = res.msg.followeeCount;
+      that.followerCount = res.msg.followerCount;
+      that.userLikeCount = res.msg.user.likeCount;
 
-        this.hasFollowed = res.msg.hasFollowed;
-        // console.log("粉丝的信息", res.msg);
-        this.$emit("loadingFinish", true);
-      },
+      that.hasFollowed = res.msg.hasFollowed;
+      // console.log("粉丝的信息", res.msg);
+      that.$emit("loadingFinish", true);
     });
   },
   methods: {
@@ -127,44 +129,39 @@ export default {
       this.visible = false;
     },
     follow() {
-      console.log('关注点击')
-      reqwest({
-        url: CONST.URL + "/follow",
+      // console.log('关注点击')
+      let that = this
+      axios({
+        url: "/follow",
         type: "json",
         method: "POST",
         contentType: "application/json;charset=utf-8",
-        data: JSON.stringify({
+        data: {
           entityType: 3,
           entityId: this.userID,
-        }),
-        success: (res) => {
-          console.log("关注成功", res.msg);
-          this.hasFollowed = true
         },
-        error: function (err) {
-          this.error = err;
-        },
+      })
+      .then(function () {
+        // console.log("关注成功", res.msg);
+        that.hasFollowed = true
       });
     },
 
     unfollow() {
-      console.log(CONST.URL + "/unfollow")
-      reqwest({
-        url: CONST.URL + "/unfollow",
+      // console.log("/unfollow")
+      let that = this
+      axios({
+        url: "/unfollow",
         type: "json",
         method: "POST",
         contentType: "application/json;charset=utf-8",
-        data: JSON.stringify({
+        data: {
           entityType: 3,
           entityId: this.userID,
-        }),
-        success: (res) => {
-          console.log("取关成功", res.msg);
-          this.hasFollowed = false
         },
-        error: function (err) {
-          this.error = err;
-        },
+      })
+      .then(function () {
+        that.hasFollowed = false
       });
     },
 
@@ -200,7 +197,10 @@ export default {
 .user-info-title {
   font-size: 18px;
   margin-top: 10px;
-  margin-left: 10px;
+  margin-left: 5px;
+}
+.user-info-desc{
+  margin-left: 5px;
 }
 .user-setting {
   float: right;
@@ -209,6 +209,7 @@ export default {
 .user-follow-button {
   float: right;
   border-radius: 10px;
+  
 }
 .user-some-info {
   border-radius: 25px;

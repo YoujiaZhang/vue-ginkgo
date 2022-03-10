@@ -8,7 +8,7 @@ const IconFont = Icon.createFromIconfontCN({
 Vue.component('MyIcon', IconFont);
 
 // 引入Vant组件库
-import '../../static/vantReset.less'
+import '../../static/VantReset.less'
 import { Tabbar as VantTabbar, TabbarItem as VantTabbarItem } from "vant";
 import { Grid as VantGrid, GridItem as VantGridItem } from 'vant';
 import { Image as VanImage } from 'vant';
@@ -51,5 +51,5 @@ Vue.use(VanBage);
 
 // 引入蚂蚁的组件库
 import Antd from 'ant-design-vue';
-import '../../static/reset.less'
+import '../../static/AntReset.less'
 Vue.use(Antd);

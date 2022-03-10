@@ -240,7 +240,7 @@ import infiniteScroll from "vue-infinite-scroll";
 import { Toast as VantToast } from "vant";
 
 import CONST from "../../assets/const";
-import reqwest from "reqwest";
+import axios from "../../plugins/Axios"
 
 export default {
   directives: { infiniteScroll },
@@ -303,14 +303,14 @@ export default {
   },
   methods: {
     fetchReplyData(callback) {
-      reqwest({
-        url: CONST.URL + "/comment/reply-list/" + this.rootComment.id,
+      axios({
+        url: "/comment/reply-list/" + this.rootComment.id,
         type: "json",
         method: "GET",
         data: { current: this.current },
-        success: (res) => {
-          callback(res);
-        },
+      })
+      .then(function (response) {
+        callback(response.data);
       });
     },
 
@@ -387,49 +387,50 @@ export default {
     },
 
     likeComment(userID) {
-      reqwest({
-        url: CONST.URL + "/like",
+      let that = this
+      axios({
+        url: "/like",
         type: "json",
         method: "POST",
         headers: {
           Authorization: "HUSTer_" + this.$store.state.myTicket,
         },
-        data: {
+        params: {
           entityType: "2",
           entityId: String(this.rootComment.id),
           entityUserId: userID,
           postId: this.postMessage.postID,
         },
-        success: (res) => {
-          this.commentLikes = res.msg.likeCount;
-          this.commentLikeAction = res.msg.likeStatus === 1 ? "liked" : "disliked";
-          this.$forceUpdate();
-          this.$emit("replyLikeComment", this.rootComment.id, res.msg);
-        },
+      })
+      .then(function (response) {
+        that.commentLikes = response.data.msg.likeCount;
+        that.commentLikeAction = response.data.msg.likeStatus === 1 ? "liked" : "disliked";
+        that.$forceUpdate();
+        that.$emit("replyLikeComment", that.rootComment.id, response.data.msg);
       });
     },
 
     likeReply(a, userID) {
       let idStrings = a.currentTarget.id.split("$");
-      reqwest({
-        url: CONST.URL + "/like",
+      let that = this
+      axios({
+        url: "/like",
         type: "json",
         method: "POST",
         headers: {
           Authorization: "HUSTer_" + this.$store.state.myTicket,
         },
-        data: {
+        params: {
           entityType: "2",
           entityId: idStrings[0],
           entityUserId: userID,
           postId: this.postMessage.postID,
         },
-        success: (res) => {
-          this.allLikes[idStrings[0]].iLike = res.msg.likeCount;
-          this.allLikes[idStrings[0]].iAction =
-            res.msg.likeStatus === 1 ? "liked" : "disliked";
-          this.$forceUpdate();
-        },
+      })
+      .then(function (response) {
+        that.allLikes[idStrings[0]].iLike = response.data.msg.likeCount;
+        that.allLikes[idStrings[0]].iAction = response.data.msg.likeStatus === 1 ? "liked" : "disliked";
+        that.$forceUpdate();
       });
     },
 
@@ -462,15 +463,16 @@ export default {
 
     replySend() {
       this.showReply = false;
-      reqwest({
-        url: CONST.URL + "/comment/add",
+      let that = this
+      axios({
+        url: "/comment/add",
         type: "json",
         method: "POST",
         headers: {
           Authorization: "HUSTer_" + this.$store.state.myTicket,
         },
         contentType: "application/json;charset=utf-8",
-        data: JSON.stringify({
+        data: {
           content: this.replyMessage,
           picUrls: [],
 
@@ -480,19 +482,19 @@ export default {
 
           postId: Number(this.postMessage.postID),
           rootId: Number(this.rootCommentId),
-        }),
-        success: () => {
-          // console.log("评论回复成功", res);
-          VantToast({
-            message: "发布成功",
-            icon: "success",
-          });
-
-          this.current = 1;
-          this.replys = [];
-          this.allLikes = [];
-          this.loadMoreReplys();
         },
+      })
+      .then(function () {
+        // console.log("评论回复成功", res);
+        VantToast({
+          message: "发布成功",
+          icon: "success",
+        });
+
+        that.current = 1;
+        that.replys = [];
+        that.allLikes = [];
+        that.loadMoreReplys();
       });
       this.replyMessage = "";
     },

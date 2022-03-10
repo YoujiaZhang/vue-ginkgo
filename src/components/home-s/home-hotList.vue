@@ -20,8 +20,7 @@
 </template>
 
 <script>
-import reqwest from "reqwest";
-import CONST from "../../assets/const";
+import axios from "../../plugins/Axios"
 
 export default {
   data() {
@@ -30,16 +29,17 @@ export default {
     };
   },
   created() {
-    reqwest({
-      url: CONST.URL + "/discuss/index",
+    let that = this
+    axios({
+      url: "/discuss/index",
       type: "json",
       method: "GET",
       data: { orderMode: 1, current: 1 },
-      success: (res) => {
-        this.data = res.msg.discussPosts.result;
-        this.$emit("hotListLoading");
-        this.$forceUpdate();
-      },
+    })
+    .then(function (response) {
+      that.data = response.data.msg.discussPosts.result;
+      that.$emit("hotListLoading");
+      that.$forceUpdate();
     });
   },
   methods: {

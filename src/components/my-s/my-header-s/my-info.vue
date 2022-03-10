@@ -154,7 +154,7 @@
 <script>
 import uploadPicture from "../../picture-s/uploadPicture.vue";
 
-import reqwest from "reqwest";
+import axios from "../../../plugins/Axios"
 import CONST from "../../../assets/const";
 import { Toast as VantToast } from "vant";
 
@@ -239,43 +239,45 @@ export default {
     };
   },
   created() {
-    reqwest({
-      url: CONST.URL + "/user/realname/get",
+    let that = this
+    axios({
+      url: "/user/realname/get",
       type: "json",
       method: "GET",
       headers: {
-        ticket: this.$store.state.myTicket,
+        Authorization: this.$store.state.myTicket,
       },
-      success: (res) => {
-        console.log("获取实名信息", res);
-        this.form.realName = res.msg.realName;
-        this.form.studentCode = res.msg.studentCode;
-        this.form.institute = res.msg.institute;
-        this.form.professionalClass = res.msg.professionalClass;
-        this.studentCardUrl = res.msg.studentCardUrl;
+    })
+    .then(function (response) {
+      // console.log("获取实名信息", res);
+      let res = response.data
+      that.form.realName = res.msg.realName;
+      that.form.studentCode = res.msg.studentCode;
+      that.form.institute = res.msg.institute;
+      that.form.professionalClass = res.msg.professionalClass;
+      that.studentCardUrl = res.msg.studentCardUrl;
 
-        this.auditStatus = res.msg.auditStatus
+      that.auditStatus = res.msg.auditStatus
 
-        if (this.studentCardUrl != null) {
-          this.imageError = false;
-        } else {
-          this.imageError = true;
-        }
-        
-        if(this.form.realName==null||
-          this.form.studentCode==null||
-          this.form.institute==null||
-          this.form.professionalClass==null||
-          this.studentCardUrl==null
-        ){
-          this.visible = true
-          this.canNotWrite = false;
-        }
-        else{
-          this.visible = false
-          this.canNotWrite = true
-        }
-      },
+      if (that.studentCardUrl != null) {
+        that.imageError = false;
+      } else {
+        that.imageError = true;
+      }
+      
+      if(that.form.realName==null||
+        that.form.studentCode==null||
+        that.form.institute==null||
+        that.form.professionalClass==null||
+        that.studentCardUrl==null
+      ){
+        that.visible = true
+        that.canNotWrite = false;
+      }
+      else{
+        that.visible = false
+        that.canNotWrite = true
+      }
     });
   },
   methods: {
@@ -284,26 +286,29 @@ export default {
     },
 
     changeUserName() {
-      reqwest({
-        url: CONST.URL + "/user/username",
+      let that = this
+      axios({
+        url: "/user/username",
         type: "json",
         method: "POST",
-        contentType: "application/json;charset=utf-8",
         headers: {
-          ticket: this.$store.state.myTicket,
+          Authorization: this.$store.state.myTicket,
         },
-        data: JSON.stringify(this.userName),
-        success: (res) => {
-          VantToast({
-            message: res.msg,
-            icon: res.code==='200' ? "success" : "cross",
-          });
-          if(res.code==='200'){
-            this.$emit("myNewUserName", this.userName);
-            this.user.username = this.userName
-            this.userName = ''
-          }
+        data: {
+          username : this.userName
         },
+      })
+      .then(function (response) {
+        let res = response.data
+        VantToast({
+          message: res.msg,
+          icon: res.code==='200' ? "success" : "cross",
+        });
+        if(res.code=='200'){
+          that.$emit("myNewUserName", that.userName);
+          that.user.username = that.userName
+          that.userName = ''
+        }
       });
     },
     changeStudentInfo() {
@@ -324,32 +329,33 @@ export default {
         return
       }
 
-      reqwest({
-        url: CONST.URL + "/user/realname",
+      let that = this
+      axios({
+        url: "/user/realname",
         type: "json",
         method: "POST",
         contentType: "application/json;charset=utf-8",
 
         headers: {
-          ticket: this.$store.state.myTicket,
+          Authorization: this.$store.state.myTicket,
         },
 
-        data: JSON.stringify({
+        data: {
           studentCardUrl: this.studentCardUrl,
           studentCode: this.form.studentCode,
           realName: this.form.realName,
           institute: this.form.institute,
           professionalClass: this.form.professionalClass,
-        }),
-
-        success: () => {
-          VantToast({
-            message: "上传成功",
-            icon: "success",
-          });
-          this.canNotWrite = true;
-          this.visible = false
         },
+
+      })
+      .then(function () {
+        VantToast({
+          message: "上传成功",
+          icon: "success",
+        });
+        that.canNotWrite = true;
+        that.visible = false
       });
     },
 
@@ -374,52 +380,54 @@ export default {
       let tempPicName = CONST.guid() + ".jpg";
       
       let p = new Promise((resolve) => {
-        reqwest({
-          url: CONST.URL + "/cos/credential",
+        let that= this
+        axios({
+          url: "/cos/credential",
           type: "json",
           method: "GET",
           data: {
             type: "avatar",
             fileName: tempPicName,
           },
-          success: (res) => {
-            let tempSecret = res.msg;
-            const COS = require("cos-js-sdk-v5");
+        })
+        .then(function (response) {
+          let tempSecret = response.data.msg;
+          const COS = require("cos-js-sdk-v5");
 
-            this.cos = new COS({
-              getAuthorization: (options, callback) => {
-                let data = {
-                  TmpSecretId: tempSecret.credentials.tmpSecretId,
-                  TmpSecretKey: tempSecret.credentials.tmpSecretKey,
-                  XCosSecurityToken: tempSecret.credentials.sessionToken,
+          that.cos = new COS({
+            getAuthorization: (options, callback) => {
+              let data = {
+                TmpSecretId: tempSecret.credentials.tmpSecretId,
+                TmpSecretKey: tempSecret.credentials.tmpSecretKey,
+                XCosSecurityToken: tempSecret.credentials.sessionToken,
 
-                  StartTime: tempSecret.startTime, // 时间戳，单位秒
-                  ExpiredTime: tempSecret.expiredTime, // 时间戳，单位秒
-                };
-                callback(data);
-              },
-            });
+                StartTime: tempSecret.startTime, // 时间戳，单位秒
+                ExpiredTime: tempSecret.expiredTime, // 时间戳，单位秒
+              };
+              callback(data);
+            },
+          });
 
-            this.cos.putObject(
-              {
-                Bucket: "test-1306812178",
-                Region: "ap-guangzhou",
-                Key: this.$store.state.myUserID + "/" + tempPicName,
-                Body: CONST.dataURLtoFile(data),
-              },
-              function (err, data) {
-                console.log(err || data);
-                resolve(avatarNewPaths.push("https://" + data.Location));
-              }
-            );
-          },
+          that.cos.putObject(
+            {
+              Bucket: "test-1306812178",
+              Region: "ap-guangzhou",
+              Key: that.$store.state.myUserID + "/" + tempPicName,
+              Body: CONST.dataURLtoFile(data),
+            },
+            function (err, data) {
+              // console.log(err || data);
+              resolve(avatarNewPaths.push("https://" + data.Location));
+            }
+          );
         });
       });
       promiseArr.push(p);
 
       Promise.all(promiseArr).then(() => {
-        reqwest({
-          url: CONST.URL + "/user/updateHeader",
+        let that= this
+        axios({
+          url: "/user/updateHeader",
           type: "json",
           method: "POST",
           contentType: "application/json;charset=utf-8",
@@ -428,18 +436,18 @@ export default {
             Authorization: "HUSTer_" + this.$store.state.myTicket,
           },
 
-          data: JSON.stringify({
+          data: {
             headerUrl: avatarNewPaths[0],
-          }),
-          success: () => {
-            VantToast({
-              message: "更新成功",
-              icon: "success",
-            });
-            this.user.headerUrl = avatarNewPaths[0];
-            this.$forceUpdate();
-            this.$emit("myNewAvatar", avatarNewPaths[0]);
           },
+        })
+        .then(function () {
+          VantToast({
+            message: "更新成功",
+            icon: "success",
+          });
+          that.user.headerUrl = avatarNewPaths[0];
+          that.$forceUpdate();
+          that.$emit("myNewAvatar", avatarNewPaths[0]);
         });
       });
     },
@@ -450,8 +458,9 @@ export default {
       let stuCardNewPaths = [];
       let promiseArr = [];
       let p = new Promise((resolve) => {
-        reqwest({
-          url: CONST.URL + "/cos/credential",
+        let that= this
+        axios({
+          url: "/cos/credential",
           type: "json",
           method: "GET",
           data: {
@@ -460,41 +469,41 @@ export default {
               this.studentCardPicture[0].uid +
               this.studentCardPicture[0].name,
           },
-          success: (res) => {
-            let tempSecret = res.msg;
-            const COS = require("cos-js-sdk-v5");
+        })
+        .then(function (response) {
+          let tempSecret = response.data.msg;
+          const COS = require("cos-js-sdk-v5");
 
-            this.cos = new COS({
-              getAuthorization: (options, callback) => {
-                let data = {
-                  TmpSecretId: tempSecret.credentials.tmpSecretId,
-                  TmpSecretKey: tempSecret.credentials.tmpSecretKey,
-                  XCosSecurityToken: tempSecret.credentials.sessionToken,
+          that.cos = new COS({
+            getAuthorization: (options, callback) => {
+              let data = {
+                TmpSecretId: tempSecret.credentials.tmpSecretId,
+                TmpSecretKey: tempSecret.credentials.tmpSecretKey,
+                XCosSecurityToken: tempSecret.credentials.sessionToken,
 
-                  StartTime: tempSecret.startTime, // 时间戳，单位秒
-                  ExpiredTime: tempSecret.expiredTime, // 时间戳，单位秒
-                };
-                callback(data);
-              },
-            });
+                StartTime: tempSecret.startTime, // 时间戳，单位秒
+                ExpiredTime: tempSecret.expiredTime, // 时间戳，单位秒
+              };
+              callback(data);
+            },
+          });
 
-            this.cos.putObject(
-              {
-                Bucket: "test-1306812178",
-                Region: "ap-guangzhou",
-                Key:
-                  this.$store.state.myUserID +
-                  "/" +
-                  this.studentCardPicture[0].uid +
-                  this.studentCardPicture[0].name,
-                Body: this.studentCardPicture[0].originFileObj,
-              },
-              function (err, data) {
-                console.log(err || data);
-                resolve(stuCardNewPaths.push("https://" + data.Location));
-              }
-            );
-          },
+          that.cos.putObject(
+            {
+              Bucket: "test-1306812178",
+              Region: "ap-guangzhou",
+              Key:
+                that.$store.state.myUserID +
+                "/" +
+                that.studentCardPicture[0].uid +
+                that.studentCardPicture[0].name,
+              Body: that.studentCardPicture[0].originFileObj,
+            },
+            function (err, data) {
+              // console.log(err || data);
+              resolve(stuCardNewPaths.push("https://" + data.Location));
+            }
+          );
         });
       });
       promiseArr.push(p);
@@ -534,25 +543,25 @@ export default {
       reader.readAsDataURL(img)
     },
 
-    logout(){
-      reqwest({
-        url: CONST.URL + "/logout",
-        type: "json",
-        method: "GET",
-        success: () => {
-          VantToast({
-            message: "退出成功",
-            icon: "success",
-          });
-          this.$store.dispatch("ticketGet", '');
-          this.$store.dispatch("noticeUnreadCountGet",0);
-          localStorage.setItem("ticket", '');
-          this.$router.replace({
-            name: "home",
-          });
-        }
-      });
-    }
+    // logout(){
+    //   reqwest({
+    //     url: "/logout",
+    //     type: "json",
+    //     method: "GET",
+    //     success: () => {
+    //       VantToast({
+    //         message: "退出成功",
+    //         icon: "success",
+    //       });
+    //       this.$store.dispatch("ticketGet", '');
+    //       this.$store.dispatch("noticeUnreadCountGet",0);
+    //       localStorage.setItem("ticket", '');
+    //       this.$router.replace({
+    //         name: "home",
+    //       });
+    //     }
+    //   });
+    // }
   },
 };
 </script>

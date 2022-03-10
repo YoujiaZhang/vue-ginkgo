@@ -43,8 +43,9 @@ import commentsListEmpty from "../../empty-s/empty-list-state.vue";
 import myFollower from "./my-follower.vue";
 
 import infiniteScroll from "vue-infinite-scroll";
-import CONST from "../../../assets/const";
-import reqwest from "reqwest";
+
+import CONST from "../../../assets/const"
+import axios from "../../../plugins/Axios"
 
 export default {
   directives: { infiniteScroll },
@@ -79,14 +80,14 @@ export default {
 
   methods: {
     fetchData(callback) {
-      reqwest({
-        url: CONST.URL + "/followers/" + this.$store.state.myUserID,
+      axios({
+        url: "/followers/" + this.$store.state.myUserID,
         type: "json",
         method: "GET",
         data: { current: this.current },
-        success: (res) => {
-          callback(res);
-        },
+      })
+      .then(function (response) {
+        callback(response.data);
       });
     },
 

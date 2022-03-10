@@ -60,7 +60,7 @@ import myPosts from "./my-posts.vue";
 import infiniteScroll from "vue-infinite-scroll";
 
 import CONST from "../../../assets/const";
-import reqwest from "reqwest";
+import axios from "../../../plugins/Axios"
 
 export default {
   components: { myPosts },
@@ -96,14 +96,14 @@ export default {
   },
   methods: {
     fetchData(callback) {
-      reqwest({
-        url: CONST.URL + "/user/discuss/" + this.$store.state.myUserID,
+      axios({
+        url: "/user/discuss/" + this.$store.state.myUserID,
         type: "json",
         method: "get",
         data: { current: this.current },
-        success: (res) => {
-          callback(res);
-        },
+      })
+      .then(function (response) {
+        callback(response.data);
       });
     },
 

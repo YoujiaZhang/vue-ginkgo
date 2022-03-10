@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import tablebar from "./components/tableBar.vue";
+import tablebar from "./pages/tableBar.vue";
 export default {
   name: "App",
   components:{tablebar},

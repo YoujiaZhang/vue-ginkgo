@@ -63,7 +63,7 @@ export default {
         let left = e.targetTouches[0].clientX - this.inset.left;
         let top = e.targetTouches[0].clientY - this.inset.top;
 
-        if (left < 0) {
+        if (left < 0) { 
           left = 0;
         } else if (left > window.innerWidth - this.dragBall.offsetWidth) {
           left = window.innerWidth - this.dragBall.offsetWidth;
@@ -92,8 +92,6 @@ export default {
         this.dragBall.style.borderBottomLeftRadius =
           (left / window.innerWidth) * 100 + "px";
 
-        // this.zyj = left/window.innerWidth;
-        // this.zyj = this.zyj.toFixed(2);
       }
     },
     touchend(e) {

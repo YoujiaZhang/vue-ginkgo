@@ -289,7 +289,7 @@ import infiniteScroll from "vue-infinite-scroll";
 import { Toast as VantToast } from "vant";
 
 import CONST from "../../assets/const";
-import reqwest from "reqwest";
+import axios from "../../plugins/Axios"
 
 export default {
   directives: { infiniteScroll },
@@ -373,19 +373,20 @@ export default {
           };
         }
       }
+      console.log(this.allLikes)
     });
   },
 
   methods: {
     fetchCommentData(callback) {
-      reqwest({
-        url: CONST.URL + "/comment/list/" + this.postMessage.postID,
+      axios({
+        url: "/comment/list/" + this.postMessage.postID,
         type: "json",
         method: "GET",
         data: { current: this.current },
-        success: (res) => {
-          callback(res);
-        },
+      })
+      .then(function (response) {
+        callback(response.data);
       });
     },
 
@@ -431,49 +432,51 @@ export default {
 
     likeComment(a, userID) {
       let idStrings = a.currentTarget.id;
-      reqwest({
-        url: CONST.URL + "/like",
+      let that = this
+      axios({
+        url: "/like",
         type: "json",
         method: "POST",
         headers: {
           Authorization: "HUSTer_" + this.$store.state.myTicket,
         },
-        data: {
+        params: {
           entityType: "2",
           entityId: idStrings,
           entityUserId: userID,
           postId: this.postMessage.postID,
         },
-        success: (res) => {
-          this.allLikes[idStrings].iLike = res.msg.likeCount;
-          this.allLikes[idStrings].iAction = res.msg.likeStatus === 1 ? "liked" : "disliked";
-          this.moreReplysAllLikes = this.allLikes[idStrings];
-          this.$forceUpdate();
-        },
+      })
+      .then(function (response) {
+        that.allLikes[idStrings].iLike = response.data.msg.likeCount;
+        that.allLikes[idStrings].iAction = response.data.msg.likeStatus === 1 ? "liked" : "disliked";
+        that.moreReplysAllLikes = that.allLikes[idStrings];
+        that.$forceUpdate();
       });
     },
 
     likeReply(a, userID) {
       let idStrings = a.currentTarget.id.split("$");
-      reqwest({
-        url: CONST.URL + "/like",
+      let that = this
+      axios({
+        url: "/like",
         type: "json",
         method: "POST",
         headers: {
           Authorization: "HUSTer_" + this.$store.state.myTicket,
         },
-        data: {
+        params: {
           entityType: "2",
           entityId: idStrings[0],
           entityUserId: userID,
           postId: this.postMessage.postID,
         },
-        success: (res) => {
-          this.allLikes[idStrings[1]][idStrings[0]].iLike = res.msg.likeCount;
-          this.allLikes[idStrings[1]][idStrings[0]].iAction = res.msg.likeStatus === 1 ? "liked" : "disliked";
-          this.moreReplysAllLikes = this.allLikes[idStrings[1]];
-          this.$forceUpdate();
-        },
+      })
+      .then(function (response) {
+        that.allLikes[idStrings[1]][idStrings[0]].iLike = response.data.msg.likeCount;
+        that.allLikes[idStrings[1]][idStrings[0]].iAction = response.data.msg.likeStatus === 1 ? "liked" : "disliked";
+        that.moreReplysAllLikes = that.allLikes[idStrings[1]];
+        that.$forceUpdate();
       });
     },
 
@@ -507,15 +510,16 @@ export default {
 
     replySend() {
       this.showReply = false;
-      reqwest({
-        url: CONST.URL + "/comment/add",
+      let that = this
+      axios({
+        url: "/comment/add",
         type: "json",
         method: "POST",
         headers: {
           Authorization: "HUSTer_" + this.$store.state.myTicket,
         },
         contentType: "application/json;charset=utf-8",
-        data: JSON.stringify({
+        data: {
           content: this.replyMessage,
           picUrls: [],
 
@@ -525,19 +529,18 @@ export default {
 
           postId: Number(this.postMessage.postID),
           rootId: Number(this.rootCommentId),
-        }),
-        success: () => {
-
-          VantToast({
-            message: "发布成功",
-            icon: "success",
-          });
-
-          this.current = 1;
-          this.comments = [];
-          this.allLikes = [];
-          this.loadMoreComment();
         },
+      })
+      .then(function () {
+        VantToast({
+          message: "发布成功",
+          icon: "success",
+        });
+
+        that.current = 1;
+        that.comments = [];
+        that.allLikes = [];
+        that.loadMoreComment();
       });
       this.replyMessage = "";
     },

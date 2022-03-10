@@ -54,8 +54,7 @@ import commentsListEmpty from "../../empty-s/empty-list-state.vue";
 import myComment from "./my-comment.vue";
 
 import infiniteScroll from "vue-infinite-scroll";
-import CONST from "../../../assets/const";
-import reqwest from "reqwest";
+import axios from "../../../plugins/Axios"
 
 export default {
   components: { myComment },
@@ -87,14 +86,14 @@ export default {
   },
   methods: {
     fetchData(callback) {
-      reqwest({
-        url: CONST.URL + "/user/comment/" + this.$store.state.myUserID,
+      axios({
+        url: "/user/comment/" + this.$store.state.myUserID,
         type: "json",
         method: "GET",
         data: { current: this.current },
-        success: (res) => {
-          callback(res);
-        },
+      })
+      .then(function (response) {
+        callback(response.data);
       });
     },
 

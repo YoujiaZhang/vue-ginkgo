@@ -112,7 +112,7 @@ import messageListEmpty from "../empty-s/empty-list-state.vue";
 import infiniteScroll from "vue-infinite-scroll";
 
 import CONST from "../../assets/const";
-import reqwest from "reqwest";
+import axios from "../../plugins/Axios"
 
 export default {
   directives: { infiniteScroll },
@@ -146,14 +146,14 @@ export default {
   },
   methods: {
     fetchMessageData(callback) {
-      reqwest({
-        url: CONST.URL + "/notice/detail/" + this.messageType,
+      axios({
+        url: "/notice/detail/" + this.messageType,
         type: "json",
         method: "GET",
         data: { current: this.current },
-        success: (res) => {
-          callback(res);
-        },
+      })
+      .then(function (response) {
+        callback(response.data);
       });
     },
 
