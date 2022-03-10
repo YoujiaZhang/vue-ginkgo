@@ -25,8 +25,10 @@ export default {
     }
   },
   created(){
-    this.code = this.$route.params.code
-    this.msg = this.$route.params.msg
+    if(JSON.stringify(this.$route.params)!='{}'){
+      this.code = this.$route.params.code
+      this.msg = this.$route.params.msg
+    }
   },
   methods: {
     goBack() {
