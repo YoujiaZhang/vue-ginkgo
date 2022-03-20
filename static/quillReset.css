@@ -1,0 +1,39 @@
+.ql-snow .ql-color-picker .ql-picker-options {
+  padding: 3px 5px;
+  width: 144px;
+}
+.ql-snow .ql-color-picker .ql-picker-item {
+  height: 18px;
+  width: 18px;
+}
+.ql-editor {
+  color: #333333;
+}
+.ql-snow .ql-editor blockquote {
+  border-left: 4px solid #ccc;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+.ql-editor ol, .ql-editor ul {
+  padding-left: 0.25em;
+}
+
+.ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button{
+  float: none;
+  vertical-align:middle;
+}
+
+.ql-snow .ql-picker {
+  float: none;
+  vertical-align:middle;
+}
+
+.ql-container.ql-snow {
+  border: 0px solid #ccc;
+}

@@ -1,7 +1,5 @@
 @import "~ant-design-vue/dist/antd.less";
 
-
-
 .ant-list-item-meta-avatar {
   margin-right: 0px;
 }
@@ -106,6 +104,7 @@
 }
 .ant-collapse-content > .ant-collapse-content-box {
   padding: 8px;
+  // text-align: center;
 }
 
 .has-error .ant-form-explain, .has-error .ant-form-split {
@@ -118,4 +117,47 @@
 
 p{
   margin-bottom: 2px;
+}
+
+blockquote {
+  border-left: 4px solid #ccc;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  // border-top-left-radius: 3px;
+  // border-bottom-left-radius: 3px;
+  border-radius: 3px;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+ol, ul {
+  padding-left: 0.25em;
+}
+
+.ant-card-meta-description ol li:not(.ant-list-item) {
+  counter-increment: list-0;
+}
+
+.ant-card-meta-description ol li:not(.ant-list-item)::before {
+  content: counter(list-0, decimal) '. ';
+  margin-right: 0.3em;
+  margin-left: 0.25em;
+}
+
+#my-post-content ol li:not(.ant-list-item) {
+  counter-increment: list-0;
+}
+
+#my-post-content ol li:not(.ant-list-item)::before {
+  content: counter(list-0, decimal) '. ';
+}
+
+
+
+.ant-card-meta-description ul li:not(.ant-list-item)::before {
+  content: '\2022';
+  margin-right: 0.3em;
+  margin-left: 0.25em;
 }
