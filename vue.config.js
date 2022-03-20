@@ -17,7 +17,7 @@ module.exports = {
     },
   },
   devServer: {
-    // public: '211.69.197.48:8080',
+    public: '211.69.197.48:8080',
     // proxy: "http://159.75.254.198:8080/",
 
     proxy: {
