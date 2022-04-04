@@ -276,7 +276,7 @@ export default {
   updated() {
     if(this.firstUpdate){
       let textHeight = this.$refs['post-summary'].offsetHeight
-      if (textHeight >= 8*22){
+      if (textHeight > 8*22){
         this.hideBtn = false;
         this.textMore = true;
         this.firstUpdate = false

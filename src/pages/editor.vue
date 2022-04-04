@@ -29,7 +29,6 @@
         </a-upload>
       </a-collapse-panel>
     </a-collapse>
-    
 
     <!-- 展示图片预览 -->
     <a-modal :visible="previewVisible" :footer="null" @cancel="previewVisible = false">
@@ -43,6 +42,8 @@
       @richTextDataChange="richTextDataChange"
       @fold="picKey=['0']"
     />
+
+    {{content}}
 
     <!-- 返回按钮 -->
     <myBall @click="goBack"></myBall>
@@ -187,7 +188,7 @@ export default {
 
       for (var i = 0; i < this.postPicturesList.length; i++) {
         let p = new Promise((resolve) => {
-          let thisFileName = this.postPicturesList[i].name;
+          let thisFileName = this.postPicturesList[i].uid + this.postPicturesList[i].name;
           let thisFileObj = this.postPicturesList[i].originFileObj;
 
           let that = this
@@ -200,9 +201,11 @@ export default {
             },
           })
           .then(function (response) {
-            let tempSecret = response.data.msg;
-            const COS = require("cos-js-sdk-v5");
+            let bucket = response.data.msg.bucket
+            let region = response.data.msg.region
+            let tempSecret = response.data.msg.credential;
 
+            const COS = require("cos-js-sdk-v5");
             that.cos = new COS({
               getAuthorization: (options, callback) => {
                 let data = {
@@ -219,8 +222,8 @@ export default {
 
             that.cos.putObject(
               {
-                Bucket: "test-1306812178",
-                Region: "ap-guangzhou",
+                Bucket: bucket,
+                Region: region,
                 Key: that.$store.state.myUserID + "/" + thisFileName,
                 Body: thisFileObj,
                 onProgress(params){
