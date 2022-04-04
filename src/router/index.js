@@ -3,7 +3,7 @@ import VueRouter from "vue-router";
 
 import my from "../pages/my.vue";
 import other from "../pages/other.vue";
-import login from "../pages/login.vue";
+import login from "../pages/login(带账号登录).vue";
 import audit from "../pages/audit.vue";
 
 import home from "../pages/home.vue";
@@ -13,6 +13,10 @@ import content from "../pages/content.vue";
 import message from "../pages/message.vue";
 import hotList from "../pages/hotList.vue";
 import error from "../pages/error.vue"
+
+import communityNorms from "../pages/about-s/community-norms.vue"
+import userAgreement from "../pages/about-s/user-agreement.vue"
+import privacyPolicy from "../pages/about-s/privacy-policy.vue"
 
 Vue.use(VueRouter);
 
@@ -74,6 +78,21 @@ const router = new VueRouter({
       path: "/error",
       name: "error",
       component: error,
+    },
+    {
+      path: "/communityNorms",
+      name: "communityNorms",
+      component: communityNorms,
+    },
+    {
+      path: "/userAgreement",
+      name: "userAgreement",
+      component: userAgreement,
+    },
+    {
+      path: "/privacyPolicy",
+      name: "privacyPolicy",
+      component: privacyPolicy,
     },
     { path: "*", redirect: "/home" },
   ],
