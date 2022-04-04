@@ -13,6 +13,7 @@ const service = axios.create({
   // baseURL: "http://10.11.75.163:8080/api",
   baseURL: "http://211.69.197.48:8080/api",
   // baseURL: "http://119.91.149.96:8080/api", // 服务器ip
+  // baseURL: "http://119.91.149.96:8080/api"
   timeout: 10000, // 请求超时时间
 });
 

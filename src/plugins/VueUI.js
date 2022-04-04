@@ -3,7 +3,7 @@ import Vue from 'vue';
 // 导入阿里图标库
 import { Icon } from 'ant-design-vue';
 const IconFont = Icon.createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_3157150_44wp7vb18m3.js',
+  scriptUrl: '//at.alicdn.com/t/font_3157150_s601od41mr.js',
 });
 Vue.component('MyIcon', IconFont);
 
@@ -12,6 +12,8 @@ import '../../static/VantReset.less'
 import { Tabbar as VantTabbar, TabbarItem as VantTabbarItem } from "vant";
 import { Swipe as VantSwipe, SwipeItem as VantSwipeItem } from 'vant';
 import { Grid as VantGrid, GridItem as VantGridItem } from 'vant';
+import { Cell as VantCell, CellGroup as VantCellGroup } from 'vant';
+import { Collapse as VantCollapse, CollapseItem as VantCollapseItem } from 'vant';
 
 import { 
   Tag as VantTag, 
@@ -32,6 +34,10 @@ Vue.use(VantTabbar);
 Vue.use(VantTabbarItem);
 Vue.use(VantGrid);
 Vue.use(VantGridItem);
+Vue.use(VantCell);
+Vue.use(VantCellGroup);
+Vue.use(VantCollapse);
+Vue.use(VantCollapseItem);
 
 Vue.use(VantTag);
 Vue.use(VantIcon);
