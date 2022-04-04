@@ -1,8 +1,9 @@
 # vue-ginkgo
 
+**Vue2**
+
 ## 相关配置
 ```
-test@0.1.0 /media/zyj/资料/作坊/MyTalk(wxLog)
 ├── @tinymce/tinymce-vue@3.2.8
 ├── @vue/cli-plugin-babel@4.5.15
 ├── @vue/cli-plugin-eslint@4.5.15
