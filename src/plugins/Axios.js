@@ -1,19 +1,9 @@
 import axios from "axios";
 import router from "../router/index.js";
 
-// URL: 'http://192.168.0.101:8080/api',
-// URL: "http://211.69.197.48:8080/api", // 实验室电脑校园网的ip
-// URL: "http://localhost:8080/api",
-// URL: "http://119.91.149.96:8080/api", // 服务器ip
-// URL: "http://10.11.75.163:8080/api",  // 笔记本校园网的ip
-// URL: 'http://192.168.87.149:8080/api',// 手机热点ip
-
 const service = axios.create({
-  // baseURL: "http://localhost:8080/api",
-  // baseURL: "http://10.11.75.163:8080/api",
-  baseURL: "http://211.69.197.48:8080/api",
-  // baseURL: "http://119.91.149.96:8080/api", // 服务器ip
-  // baseURL: "http://119.91.149.96:8080/api"
+  baseURL: "https://social-api.metacompus.com/",
+  // baseURL: "http://159.75.254.198:8080/",
   timeout: 10000, // 请求超时时间
 });
 
