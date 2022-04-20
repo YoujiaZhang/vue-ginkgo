@@ -16,19 +16,4 @@ module.exports = {
       },
     },
   },
-  devServer: {
-    // public: '211.69.197.48:8080',
-    // proxy: "http://159.75.254.198:8080/",
-
-    proxy: {
-      //配置跨域
-      "/api": {
-        target: "http://159.75.254.198:8080/",
-        changOrigin: true, //允许跨域
-        pathRewrite: {
-          "^/api": "",
-        },
-      },
-    },
-  },
 };
