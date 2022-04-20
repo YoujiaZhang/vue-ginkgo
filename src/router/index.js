@@ -3,7 +3,7 @@ import VueRouter from "vue-router";
 
 import my from "../pages/my.vue";
 import other from "../pages/other.vue";
-import login from "../pages/login(带账号登录).vue";
+import login from "../pages/login.vue";
 import audit from "../pages/audit.vue";
 
 import home from "../pages/home.vue";
