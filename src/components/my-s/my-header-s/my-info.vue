@@ -127,9 +127,9 @@
       提交
     </a-button>
 
-    <a-button style="margin-top:30px" block @click="showChangeAccount=true">
+    <!-- <a-button style="margin-top:30px" block @click="showChangeAccount=true">
       切换账号
-    </a-button>
+    </a-button> -->
 
     <van-dialog
       v-model="showChangeAccount"
@@ -716,7 +716,7 @@ export default {
         }else{
           this.studentCardLocation = stuCardNewPaths[0].msg;
           this.studentCardUrl = stuCardNewPaths[0].url;
-          this.stdCardExist = false;
+          this.stdCardExist = true;
         }
 
         this.studentCardPictureLoading = false
