@@ -35,13 +35,6 @@
         </div>
 
         <a-button
-          class="log-in" type="primary" shape="round" icon="wechat" ghost
-          @click="wxLogin"
-        >
-          微信登录
-        </a-button>
-
-        <a-button
           class="log-in" shape="round" icon="smile"
           @click="touristLogin"
         >
@@ -61,7 +54,7 @@ export default {
   data() {
     return {
       loginData: {
-        email: "admin@qq.com",
+        email: "admin@admin.com",
         password: "123",
         code: "aaa",
         rememberMe: false,
@@ -88,8 +81,6 @@ export default {
             message: '登录成功',
             icon: "success",
           });
-          // http://119.91.149.96:8080/?ticket=eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDc3MjA5NDMsInN1YiI6IjExMyIsImNyZWF0ZWQiOjE2NDc2Nzc3NDM4NzF9.mpvHE81hnfZeNGUk0PaI7pMNxTkuceTX2o26Sp1CjcjpfH7ciXu6XJPJpvklJHmu1TbSsfzNrHKTWuMHZky6qg
-          // response.data.msg = 'eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDc3MjA5NDMsInN1YiI6IjExMyIsImNyZWF0ZWQiOjE2NDc2Nzc3NDM4NzF9.mpvHE81hnfZeNGUk0PaI7pMNxTkuceTX2o26Sp1CjcjpfH7ciXu6XJPJpvklJHmu1TbSsfzNrHKTWuMHZky6qg'
           localStorage.setItem("ticket", response.data.msg);
           that.$router.push({
             name: 'to' in that.$route.params ? that.$route.params.to : 'home'
@@ -104,11 +95,6 @@ export default {
           break;
         }
       })
-    },
-    
-    wxLogin(){
-      localStorage.setItem("ticket", 'wxTempTicket');
-      window.location.href = 'http://159.75.254.198:80/wechat/oauth2/login'
     },
 
     touristLogin(){

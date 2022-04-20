@@ -269,7 +269,7 @@ export default {
         return
       }
       
-      if (this.$store.state.myAuditStatus == 0 || this.$store.state.myAuditStatus==3) {
+      if (this.$store.state.myUserType != 1 && this.$store.state.myAuditStatus == 0 || this.$store.state.myAuditStatus==3) {
         this.showRealNameConfirm = true;
         return
       }

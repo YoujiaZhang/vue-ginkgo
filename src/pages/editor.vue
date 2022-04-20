@@ -40,18 +40,17 @@
     <editor-richtext 
       v-show="true" 
       @richTextDataChange="richTextDataChange"
+      @submit="submit"
       @fold="picKey=['0']"
     />
-
-    {{content}}
 
     <!-- 返回按钮 -->
     <myBall @click="goBack"></myBall>
 
     <!-- 提交按钮 -->
-    <a-button class="submit" type="primary" shape="round" @click="submit">
+    <!-- <a-button class="submit" type="primary" shape="round" @click="submit">
       提交
-    </a-button>
+    </a-button> -->
 
     <!-- 提交成功反馈信息 -->
     <van-dialog v-model="showSubmit" @confirm="submitConfirm" showConfirmButton>
@@ -251,15 +250,15 @@ export default {
         });
         promiseArr.push(p);
       }
+
       Promise.all(promiseArr).then(() => {
-        if(!allPicturesNewPaths[0].success){
+        if(allPicturesNewPaths.length!=0 && !allPicturesNewPaths[0].success){
           VantToast({
             message: "帖子上传失败",
             icon: "cross",
           });
           this.showPictureLoadingProgress = false
         }else{
-
           let allPicturesPaths = []
           for(let i=0;i<allPicturesNewPaths.length;i++){
             allPicturesPaths.push(allPicturesNewPaths[i].msg)

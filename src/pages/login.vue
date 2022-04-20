@@ -34,7 +34,7 @@ export default {
   methods: {
     wxLogin() {
       localStorage.setItem("ticket", "wxTempTicket");
-      window.location.href = "http://159.75.254.198:8080/wechat/oauth2/login";
+      window.location.href = "https://social-api.metacompus.com/wechat/oauth2/login";
     },
 
     touristLogin() {
