@@ -69,11 +69,6 @@ export default {
       }
       this.auditList = res.msg.result;
       this.numAuditList = res.msg.rows;
-
-      for(let i in this.auditList){
-        this.studentCard.push(this.auditList[i].studentCardUrl)
-      }
-      if(this.auditList.length>0) this.getStuCard()
     });
   },
   methods: {
@@ -124,50 +119,6 @@ export default {
         this.auditList = res.msg.result;
         this.numAuditList = res.msg.rows;
         this.$forceUpdate();
-      });
-    },
-
-    getStuCard(){
-      let that = this
-      let studentCardUrl = ''
-      for(let i in that.studentCard){
-        studentCardUrl += '&filePath=' + that.studentCard[i]
-      }
-
-      axios({
-        url: "/cos/admin/credential?type=studentCard"+studentCardUrl,
-        method: "GET",
-      })
-      .then(function (response) {
-        let bucket = response.data.msg.bucket
-        let region = response.data.msg.region
-        let tempSecret = response.data.msg.credential;
-
-        const COS = require("cos-js-sdk-v5");
-        that.cos = new COS({
-          getAuthorization: (options, callback) => {
-            let data = {
-              TmpSecretId: tempSecret.credentials.tmpSecretId,
-              TmpSecretKey: tempSecret.credentials.tmpSecretKey,
-              XCosSecurityToken: tempSecret.credentials.sessionToken,
-
-              StartTime: tempSecret.startTime, // 时间戳，单位秒
-              ExpiredTime: tempSecret.expiredTime, // 时间戳，单位秒
-            };
-            callback(data);
-          },
-        });
-
-        for(let i in that.studentCard){
-          that.cos.getObjectUrl({
-            Bucket: bucket,
-            Region: region,
-            Key: that.studentCard[i]
-          },
-          function (err, data) {
-            if(data != undefined) that.auditList[i].studentCardUrl = data.Url
-          });
-        }
       });
     },
   },

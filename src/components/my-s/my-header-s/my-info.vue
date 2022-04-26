@@ -127,9 +127,9 @@
       提交
     </a-button>
 
-    <!-- <a-button style="margin-top:30px" block @click="showChangeAccount=true">
+    <a-button style="margin-top:30px" block @click="showChangeAccount=true">
       切换账号
-    </a-button> -->
+    </a-button>
 
     <van-dialog
       v-model="showChangeAccount"

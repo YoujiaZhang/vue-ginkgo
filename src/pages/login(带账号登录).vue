@@ -54,8 +54,8 @@ export default {
   data() {
     return {
       loginData: {
-        email: "admin@admin.com",
-        password: "123",
+        email: "",
+        password: "",
         code: "aaa",
         rememberMe: false,
         captchaToken: "123456",
