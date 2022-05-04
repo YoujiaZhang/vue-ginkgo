@@ -3,11 +3,11 @@
     <a-spin tip="加载中 ···" :spinning="homeLoading">
       <!-- 固定在顶部 -->
       <a-anchor>
-        <home-header/>
-        <home-hotList @hotListLoading="hotListLoading=true"/>
+        <home-header />
+        <home-hotList @hotListLoading="hotListLoading=true" />
       </a-anchor>
-      
-      <pull-refresh @refresh=pullRefresh>
+
+      <pull-refresh @refresh="pullRefresh">
         <div
           style="width: 100%;"
           v-infinite-scroll="loadMorePost"
@@ -20,17 +20,14 @@
                 class="post-item-summary"
                 :userID="msg.user.id"
                 :postID="msg.post.id"
-
                 :postTitle="msg.post.title"
                 :postContent="msg.post.content"
                 :postPictures="msg.post.picUrls"
                 :postReleaseTime="CONST.getDiffTime(msg.post.createTime)"
-
                 :postComments="msg.post.commentCount"
                 :postViews="msg.post.viewCount"
                 :postLikes="msg.post.likeCount"
                 :postLikeStatus="msg.likeStatus"
-
                 :authorName="msg.user.username"
                 :authorLevel="msg.user.level"
                 :authorAvatar="msg.user.headerUrl"
@@ -39,11 +36,10 @@
 
             <a-list-item slot="footer">
               <div style="margin-top:15px; margin-bottom:150px; width:100%; text-align: center;">
-                <span v-show="!loading" style="color:#888888;font-size: 12px"> - THE END - </span>
+                <span v-show="!loading" style="color:#888888;font-size: 12px">- THE END -</span>
                 <a-spin v-show="loading" tip="加载中..."></a-spin>
               </div>
             </a-list-item>
-
           </a-list>
         </div>
       </pull-refresh>
@@ -59,24 +55,17 @@
 
       <!-- 发布帖子按钮 -->
       <div class="editor-button-root" v-show="myUserID!=''">
-        <a-button
-          class="editor-button" type="primary" shape="circle"
-          @click="goEditor"
-        >
+        <a-button class="editor-button" type="primary" shape="circle" @click="goEditor">
           <my-icon class="editor-button-icon" type="icon-yongyan"></my-icon>
         </a-button>
       </div>
 
       <!-- 离开游客模式按钮 -->
       <div class="editor-button-root" v-show="myUserID==''">
-        <a-button
-          class="editor-button" type="primary" shape="circle"
-          @click="goLogin"
-        >
+        <a-button class="editor-button" type="primary" shape="circle" @click="goLogin">
           <my-icon class="leave-button-icon" type="icon-tuichudenglu1"></my-icon>
         </a-button>
       </div>
-
     </a-spin>
 
     <van-dialog v-model="showSetUserName" :show-confirm-button="false">
@@ -89,16 +78,18 @@
         <a-input v-model="newUserName" placeholder="输入一个有趣的名字吧">
           <div slot="addonBefore">用户名</div>
         </a-input>
-        <span style="font-size: 12px; color: #f5222d; margin-left: 5px">{{
+        <span style="font-size: 12px; color: #f5222d; margin-left: 5px">
+          {{
           setNewUserNameInfo
-        }}</span>
+          }}
+        </span>
         <a-button
           style="margin-bottom: 20px; margin-top: 20px; float: right"
-          shape="round" size="small" type="primary"
+          shape="round"
+          size="small"
+          type="primary"
           @click="setUserNameConfirm"
-        >
-          确定
-        </a-button>
+        >确定</a-button>
       </div>
     </van-dialog>
 
@@ -133,6 +124,7 @@ import CONST from "../assets/const";
 import axios from "../plugins/Axios"
 
 export default {
+  name: "home",
   directives: { infiniteScroll },
   components: { homeHeader, homeHotList, homePostItem, pullRefresh },
   data() {
@@ -151,16 +143,18 @@ export default {
 
       /* 没有实名认证 前往实名认证 */
       showRealNameConfirm: false,
-      
+
       /* 没有用户名 设置新用户名 */
-      showSetUserName: false, 
+      showSetUserName: false,
       newUserName: null,      // 新用户名
       setNewUserNameInfo: "", // 提示信息
-      
+
       /* 加载状态 */
       postLoading: false,
       hotListLoading: false,
       wxLogLoading: true,
+      /* 记录离开位置 */
+      rememberScroll: 0,
     };
   },
   computed: {
@@ -183,59 +177,59 @@ export default {
 
       let that = this
       axios({  // 根据新的token获取用户信息
-        url:  "/user/get",
+        url: "/user/get",
         method: "GET",
         headers: {
           Authorization: "HUSTer_" + myTicket,
         }
       })
-      .then(function (response) {
-        if (String(response.data.code) == "200") {
-          // 首次登陆的时候是没有用户名的所以要设置
-          if (response.data.msg.user.username == null) {
-            that.showSetUserName = true;
-          }
+        .then(function (response) {
+          if (String(response.data.code) == "200") {
+            // 首次登陆的时候是没有用户名的所以要设置
+            if (response.data.msg.user.username == null) {
+              that.showSetUserName = true;
+            }
 
-          that.$store.dispatch("userIDGet", response.data.msg.user.id);
-          that.$store.dispatch("userTypeGet", response.data.msg.user.type);
-          that.$store.dispatch("auditStatusGet", response.data.msg.user.auditStatus);
-          that.wxLogLoading = true
-        }
-      })
+            that.$store.dispatch("userIDGet", response.data.msg.user.id);
+            that.$store.dispatch("userTypeGet", response.data.msg.user.type);
+            that.$store.dispatch("auditStatusGet", response.data.msg.user.auditStatus);
+            that.wxLogLoading = true
+          }
+        })
     }
 
     this.fetchPostData((res) => {
-      if(res.msg.discussPosts.result.length!=0){
+      if (res.msg.discussPosts.result.length != 0) {
         this.current += 1;
       }
 
       // 获取帖子
       this.post = res.msg.discussPosts.result;
       this.postNum = res.msg.discussPosts.rows;
-      
+
       // 如何登录的用户 获取未读消息数量
       if (localStorage.getItem("ticket") != "tourist") {
         let that = this
         axios({
-          url:  "/message/unread",
+          url: "/message/unread",
           method: "GET",
         })
-        .then(function (response) {
-          if (String(response.data.code) == "200") {
-            that.$store.dispatch(
-              "noticeUnreadCountGet",
-              response.data.msg.commentNoticeUnreadCount +
-              response.data.msg.followNoticeUnreadCount +
-              response.data.msg.likeNoticeUnreadCount +
-              response.data.msg.letterUnreadCount
-            );
-          }
+          .then(function (response) {
+            if (String(response.data.code) == "200") {
+              that.$store.dispatch(
+                "noticeUnreadCountGet",
+                response.data.msg.commentNoticeUnreadCount +
+                response.data.msg.followNoticeUnreadCount +
+                response.data.msg.likeNoticeUnreadCount +
+                response.data.msg.letterUnreadCount
+              );
+            }
             that.postLoading = true;
-        });
+          });
       } else {
         this.postLoading = true;
       }
-    });    
+    });
   },
 
   methods: {
@@ -245,19 +239,19 @@ export default {
       } else {
         let that = this
         axios({
-          url:  "/user/username",
+          url: "/user/username",
           method: "GET",
           params: { newname: this.newUserName },
         })
-        .then(function (response) {
-          if(response.data.code == '200'){
-            that.showSetUserName = false;
-          }
-          VantToast({
-            message: response.data.msg,
-            icon: response.data.code === "200" ? "success" : "cross",
+          .then(function (response) {
+            if (response.data.code == '200') {
+              that.showSetUserName = false;
+            }
+            VantToast({
+              message: response.data.msg,
+              icon: response.data.code === "200" ? "success" : "cross",
+            });
           });
-        });
       }
     },
 
@@ -268,33 +262,33 @@ export default {
         });
         return
       }
-      
-      if (this.$store.state.myUserType != 1 && this.$store.state.myAuditStatus == 0 || this.$store.state.myAuditStatus==3) {
+
+      if (this.$store.state.myUserType != 1 && this.$store.state.myAuditStatus == 0 || this.$store.state.myAuditStatus == 3) {
         this.showRealNameConfirm = true;
         return
       }
-      
-      if(this.$store.state.myAuditStatus == 1){
+
+      if (this.$store.state.myAuditStatus == 1) {
         VantToast({
           message: "实名信息审核中，暂时无法发帖~",
         });
         this.showMoreActions = false;
         return
       }
-      
+
       this.$router.push({
         name: "editor",
       });
     },
 
-    goLogin(){
+    goLogin() {
       this.$router.push({
         name: "login",
         params: { to: 'home' }
       });
     },
 
-    goRealNameConfirm(){
+    goRealNameConfirm() {
       this.$router.push({
         name: "my",
         params: { showRealNameConfirm: true },
@@ -304,19 +298,19 @@ export default {
     fetchPostData(callback) {
       axios({
         url: "/discuss/index",
-        method: 'get', 
+        method: 'get',
         params: {
-          orderMode: 0, 
+          orderMode: 0,
           current: this.current,
         },
       })
-      .then(function (response) {
-        callback(response.data)
-      });
+        .then(function (response) {
+          callback(response.data)
+        });
     },
 
     loadMorePost() {
-      if(this.loading==true){
+      if (this.loading == true) {
         return
       }
 
@@ -330,7 +324,7 @@ export default {
       }
 
       this.fetchPostData((res) => {
-        if(res.msg.discussPosts.result.length!=0 && this.loading){
+        if (res.msg.discussPosts.result.length != 0 && this.loading) {
           this.current += 1;
         }
         this.post = post.concat(res.msg.discussPosts.result);
@@ -338,18 +332,26 @@ export default {
       });
     },
 
-    pullRefresh(done){
+    pullRefresh(done) {
       this.current = 1
       this.fetchPostData((res) => {
-        if(res.msg.discussPosts.result.length!=0){
+        if (res.msg.discussPosts.result.length != 0) {
           this.current += 1;
         }
         // 获取帖子
         this.post = res.msg.discussPosts.result;
         this.postNum = res.msg.discussPosts.rows;
         done()
-      });   
+      });
     }
+  },
+  // ljwdev
+  beforeRouteLeave(to, from, next) {
+    this.rememberScroll = document.documentElement.scrollTop;
+    next();
+  },
+  activated() {
+    document.documentElement.scrollTop = this.rememberScroll
   },
 };
 </script>
@@ -390,13 +392,12 @@ export default {
   width: 50px;
   height: 50px;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
-  
 }
 .editor-button-icon {
   font-size: 30px;
 }
 
-.leave-button-icon{
+.leave-button-icon {
   font-size: 28px;
 }
 

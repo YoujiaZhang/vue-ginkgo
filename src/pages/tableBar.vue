@@ -1,7 +1,10 @@
 <template>
   <div>
     <div>
-      <router-view></router-view>
+      <!-- 缓存 -->
+      <keep-alive include="home">
+        <router-view></router-view>
+      </keep-alive>
     </div>
 
     <div>
@@ -34,13 +37,13 @@ export default {
   data() {
     return {
       active: "home",
-      numStyle:{
-        fontSize:"10px",
+      numStyle: {
+        fontSize: "10px",
         backgroundColor: '#ff6a4c'
       },
     };
   },
-  computed:{
+  computed: {
     showBar() {
       return this.$store.state.editorKey
     },
@@ -50,6 +53,13 @@ export default {
     userType() {
       return this.$store.state.myUserType
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    this.rememberScroll = document.documentElement.scrollTop;
+    next();
+  },
+  activated() {
+    document.documentElement.scrollTop = this.rememberScroll
   },
 };
 </script>
