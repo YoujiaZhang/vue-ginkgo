@@ -353,6 +353,9 @@ export default {
   activated() {
     document.documentElement.scrollTop = this.rememberScroll
   },
+  deactivated() {
+    document.documentElement.scrollTop = 0
+  }
 };
 </script>
 
